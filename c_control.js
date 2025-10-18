@@ -204,7 +204,7 @@ Control.prototype.initGame = function() {
 	Map.prototype.backupChars();
 	
 	Control.prototype.balloon = document.getElementById('robotBalloon');
-	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Map.prototype.hint));
+	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Control.prototype.createHintMessage()));
 	
 	Control.prototype.runButton = document.getElementById('runButton');
 	Control.prototype.runButton.addEventListener('click', runCode, false);
@@ -284,6 +284,63 @@ Control.prototype.initMapTextbox = function() {
 	document.getElementById('robot-x').value = st.x;
 	document.getElementById('robot-y').value = st.y;
 	document.getElementById('robot-dir').value = st.direction;
+};
+
+/**
+ * 画面に表示するヒントを表示する
+ */
+Control.prototype.createHintMessage = function() {
+	let mes = Map.prototype.hint;
+	mes = mes.replace('%goals%', Map.prototype.goals).replace('%state%', Map.prototype.state);
+	if (mes.indexOf('%statecolor%') >= 0) {
+		let c;
+		switch(Map.prototype.state) {
+			case 0:
+				c = '白';
+				break;
+			case 1:
+				c = '黒';
+				break;
+			case 2:
+				c = '赤';
+				break;
+			case 3:	
+				c = '青';
+				break;
+			case 4:
+				c = '緑';
+				break;
+			case 5:
+				c = '黄';
+				break;
+			default:
+				c = '!!Invalid State Color!!';
+				break;
+		}
+		mes = mes.replace('%statecolor%', c+'色');
+	}
+	if (mes.indexOf('%statedirection%') >= 0) {
+		let d;
+		switch(Map.prototype.state) {
+			case 0:
+				d = '上';
+				break;
+			case 1:
+				d = '右';
+				break;
+			case 2:
+				d = '下';
+				break;
+			case 3:	
+				d = '左';
+				break;
+			default:
+				d = '!!Invalid State Direction!!';
+				break;
+		}
+		mes = mes.replace('%statedirection%', d);
+	}
+	return mes;
 };
 
 /**
