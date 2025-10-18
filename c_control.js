@@ -203,9 +203,6 @@ Control.prototype.initGame = function() {
 	Map.prototype.backupMap();
 	Map.prototype.backupChars();
 	
-	Control.prototype.balloon = document.getElementById('robotBalloon');
-	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Control.prototype.createHintMessage()));
-	
 	Control.prototype.runButton = document.getElementById('runButton');
 	Control.prototype.runButton.addEventListener('click', runCode, false);
 	
@@ -261,6 +258,9 @@ Control.prototype.initGame = function() {
 	Control.prototype.setFirstSpeed();
 
 	Control.prototype.beforeRun();
+
+	Control.prototype.balloon = document.getElementById('robotBalloon');
+	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Control.prototype.createHintMessage()));
 };
 
 /**
@@ -370,6 +370,13 @@ Control.prototype.beforeRun = function(rebuild) {
 	if (rebuild) {		
 		if (!Control.prototype.checkAndOverrideMap()) {
 			return;
+		}
+		else {
+			const a = Control.prototype.balloon.children[0];
+			while (a.firstChild) {
+				a.removeChild(a.firstChild);
+			}
+			a.appendChild(document.createTextNode(Control.prototype.createHintMessage()));
 		}
 	}
 	

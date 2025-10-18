@@ -200,9 +200,6 @@ Control.prototype.initGame = function() {
 	Map.prototype.backupMap();
 	Map.prototype.backupChars();
 	
-	Control.prototype.balloon = document.getElementById('robotBalloon');
-	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Control.prototype.createHintMessage()));
-	
 	Control.prototype.runButton = document.getElementById('runButton');
 	Control.prototype.runButton.addEventListener('click', runCode, false);
 	
@@ -261,6 +258,9 @@ Control.prototype.initGame = function() {
 			text: 'マップのパラメーターがおかしいです'
 		})
 	}
+	
+	Control.prototype.balloon = document.getElementById('robotBalloon');
+	Control.prototype.balloon.children[0].appendChild(document.createTextNode(Control.prototype.createHintMessage()));
 
 	Control.prototype.beforeRun();
 };
