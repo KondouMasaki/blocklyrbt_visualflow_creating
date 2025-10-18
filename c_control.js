@@ -409,14 +409,14 @@ Control.prototype.checkAndOverrideMap = function() {
 				if (isNaN(row[j])) {
 					Swal.fire({
 						title: errorTitle,
-						text: '行 '+i+ ' の '+(j+1)+' 番目が数字ではありません'
+						text: '行 '+i+ ' の '+j+' 番目が数字ではありません'
 					})
 					return false;
 				}
 				else if ((row[j] < 0) || (row[j] > 5)) {
 					Swal.fire({
 						title: errorTitle,
-						text: '行 '+i+ ' の '+(j+1)+' 番目が数字が 0 ～ 5 の間ではありません'
+						text: '行 '+i+ ' の '+j+' 番目が数字が 0 ～ 5 の間ではありません'
 					})
 					return false;
 				}
