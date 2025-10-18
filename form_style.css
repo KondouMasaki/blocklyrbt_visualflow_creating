@@ -1,0 +1,22 @@
+input[type="text"].map-values {
+	font-family: monospace;
+	font-size: 12pt;
+	width: 480px;
+}
+
+input[type="text"].map-number {
+	font-size: 12pt;
+	width: 40px;
+}
+
+a#g-url {
+	font-size: 12pt;
+	color: #222244;
+	background-color: #eeeeff;
+	margin: 4px;
+	padding: 2px;
+}
+
+div#create-zone {
+	background-color: #f7f7f7;
+}
