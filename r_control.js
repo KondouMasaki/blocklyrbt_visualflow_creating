@@ -347,9 +347,11 @@ Control.prototype.setFirstSpeed = function() {
 Control.prototype.beforeRun = function() {
 	Control.prototype.initRobot();	// ロボット初期化
 	
-	Map.prototype.restoreMap();
+	const pattern = Control.prototype.patternSelector.value;
+	
+	Map.prototype.restoreMap(pattern);
 	Map.prototype.restoreChars();
-	Map.prototype.beforeStart(Control.prototype.patternSelector.value);
+	Map.prototype.beforeStart(pattern);
 	
 	Control.prototype.goal = false;
 	Control.prototype.emptyLife = false;
@@ -366,17 +368,38 @@ Control.prototype.beforeRun = function() {
 Control.prototype.checkAndOverrideMap = function() {
 	let params = new URLSearchParams(document.location.search);
 	
+	const preProcChars = [];
+	if (Map.prototype.useMapPreProcess) {
+		const pd = Map.prototype.preProcessDescriptions;
+		const num = pd.length;
+		for (let i = 0; i < num; i++) {
+			preProcChars.push(pd[i].c.toLowerCase());
+		}
+	}
+	
 	let newMap = [];
 	for (let i = 0; i < 12; i++) {
 		const rowText = Control.prototype.failoverNull(params.get('r' + i));
-		const row = rowText.split(',').map(Number);
+		const row = rowText.split(',');
 		if (row.length == 12) {
 			for (let j = 0; j < 12; j++) {
 				if (isNaN(row[j])) {
-					return false;
+					// 数字ではない
+					if (Map.prototype.useMapPreProcess) {
+						if (!preProcChars.includes(row[j].toLowerCase())) {
+							return false;
+						}
+					}
+					else {
+						return false;
+					}
 				}
 				else if ((row[j] < 0) || (row[j] > 5)) {
+					// 数字であるが範囲外
 					return false;
+				}
+				else {
+					row[j] = parseInt(row[j]);
 				}
 			}
 			newMap.push(row);

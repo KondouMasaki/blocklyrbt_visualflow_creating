@@ -284,6 +284,23 @@ Control.prototype.initMapTextbox = function() {
 	document.getElementById('robot-x').value = st.x;
 	document.getElementById('robot-y').value = st.y;
 	document.getElementById('robot-dir').value = st.direction;
+	
+	if (Map.prototype.useMapPreProcess) {
+		const descs = Map.prototype.preProcessDescriptions;
+		let num = descs.length;
+		if (num > 13) {
+			num = 13;
+		}
+		for (let i = 0; i < num; i++) {
+			const desc = descs[i];
+			document.getElementById('desc' + i).appendChild(
+				document.createTextNode(desc.c.toUpperCase() + ': ' + desc.d)
+			);
+		}
+	}
+	else {
+		document.getElementById('descriptions-header').setAttribute('style', 'color: transparent');
+	}
 };
 
 /**
@@ -382,9 +399,11 @@ Control.prototype.beforeRun = function(rebuild) {
 	
 	Control.prototype.initRobot();	// ロボット初期化
 	
-	Map.prototype.restoreMap();
+	const pattern = Control.prototype.patternSelector.value;
+	
+	Map.prototype.restoreMap(pattern);
 	Map.prototype.restoreChars();
-	Map.prototype.beforeStart(Control.prototype.patternSelector.value);
+	Map.prototype.beforeStart(pattern);
 	
 	Control.prototype.goal = false;
 	Control.prototype.emptyLife = false;
@@ -401,24 +420,50 @@ Control.prototype.beforeRun = function(rebuild) {
 Control.prototype.checkAndOverrideMap = function() {
 	let newMap = [];
 	const errorTitle = '&#9888;&#65039;エラー';
+	
+	const preProcChars = [];
+	if (Map.prototype.useMapPreProcess) {
+		const pd = Map.prototype.preProcessDescriptions;
+		const num = pd.length;
+		for (let i = 0; i < num; i++) {
+			preProcChars.push(pd[i].c.toLowerCase());
+		}
+	}
+	
 	for (let i = 0; i < 12; i++) {
 		const rowText = document.getElementById('map-row' + i).value.trim();
-		const row = rowText.split(',').map(Number);
+		const row = rowText.split(',');
 		if (row.length == 12) {
 			for (let j = 0; j < 12; j++) {
 				if (isNaN(row[j])) {
-					Swal.fire({
-						title: errorTitle,
-						text: '行 '+i+ ' の '+j+' 番目が数字ではありません'
-					})
-					return false;
+					// 数字ではない
+					if (Map.prototype.useMapPreProcess) {
+						if (!preProcChars.includes(row[j].toLowerCase())) {
+							Swal.fire({
+								title: errorTitle,
+								text: '行 '+i+ ' の '+j+' 番目が使えない文字です'
+							})
+							return false;
+						}
+					}
+					else {
+						Swal.fire({
+							title: errorTitle,
+							text: '行 '+i+ ' の '+j+' 番目が数字ではありません'
+						})
+						return false;
+					}				
 				}
 				else if ((row[j] < 0) || (row[j] > 5)) {
+					// 数字であるが範囲外
 					Swal.fire({
 						title: errorTitle,
 						text: '行 '+i+ ' の '+j+' 番目が数字が 0 ～ 5 の間ではありません'
 					})
 					return false;
+				}
+				else {
+					row[j] = parseInt(row[j]);
 				}
 			}
 			newMap.push(row);

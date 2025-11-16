@@ -15,18 +15,34 @@ Map.prototype.colorValue = {
 Map.prototype.backupMap = function() {
 	Map.prototype.map2 = Map.prototype.copyMap();
 	Map.prototype.state2 = Map.prototype.state;
+	if (Map.prototype.useMapPreProcess) {
+		Map.prototype.mapPreProcess();
+	}
 };
 /**
  * マップをリストアする
  */
-Map.prototype.restoreMap = function() {
+Map.prototype.restoreMap = function(pattern) {
+	// if pettern is <empty string> selected "ぜんぶ"
 	Map.prototype.map = [];
-	var ptr = Map.prototype.map;
-	var row = Map.prototype.map2.length;
 	
-	for (var i = 0; i < row; i++) {
-		ptr.push(Map.prototype.map2[i].slice());
-	};
+	const ptr = Map.prototype.map;
+	if (Map.prototype.useMapPreProcess) {
+		if (pattern == "") {
+			pattern = 0;
+		}
+		const row = Map.prototype.pmaps[pattern].length;
+		for (let i = 0; i < row; i++) {
+			ptr.push(Map.prototype.pmaps[pattern][i].slice());
+		};
+	}
+	else {
+		const row = Map.prototype.map2.length;
+		for (let i = 0; i < row; i++) {
+			ptr.push(Map.prototype.map2[i].slice());
+		};
+	}
+
 	Map.prototype.state = Map.prototype.state2;
 };
 /**
