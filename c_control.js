@@ -293,9 +293,15 @@ Control.prototype.initMapTextbox = function() {
 		}
 		for (let i = 0; i < num; i++) {
 			const desc = descs[i];
-			document.getElementById('desc' + i).appendChild(
-				document.createTextNode(desc.c.toUpperCase() + ': ' + desc.d)
-			);
+			
+			const frg = document.createDocumentFragment();
+			const spn = document.createElement('span');
+			spn.appendChild(document.createTextNode(desc.c.toUpperCase() + ' : '));
+			spn.setAttribute('style', 'font-family: monospace; margin-left: 0.5em;');
+			frg.appendChild(spn);
+			frg.appendChild(document.createTextNode(desc.d));
+			
+			document.getElementById('desc' + i).appendChild(frg);
 		}
 	}
 	else {
